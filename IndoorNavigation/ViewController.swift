@@ -97,8 +97,9 @@ class ViewController: UIViewController {
         let signupButton = ZFRippleButton()
         signupButton.backgroundColor = .blue
         signupButton.layer.cornerRadius = 5
+        signupButton.layer.borderColor = UIColor.white.cgColor
         signupButton.setTitle("Create Free Account", for: .normal)
-        signupButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        signupButton.addTarget(self, action: #selector(handleSignUpFromLanding), for: .touchUpInside)
         landingView.addSubview(signupButton)
         signupButton.translatesAutoresizingMaskIntoConstraints = false
         signupButton.topAnchor.constraint(equalTo: landingView.topAnchor, constant: 30).isActive = true
@@ -112,8 +113,8 @@ class ViewController: UIViewController {
         signinButton.backgroundColor = .white
         signinButton.layer.cornerRadius = 5
         signinButton.layer.borderWidth = 1
-        signinButton.layer.borderColor = UIColor.gray.cgColor
-        signinButton.addTarget(self, action: #selector(handleSignIn), for: .touchUpInside)
+        signinButton.layer.borderColor = UIColor.blue.cgColor
+        signinButton.addTarget(self, action: #selector(handleSignInFromLanding), for: .touchUpInside)
         landingView.addSubview(signinButton)
         signinButton.translatesAutoresizingMaskIntoConstraints = false
         signinButton.topAnchor.constraint(equalTo: signupButton.bottomAnchor, constant: 20).isActive = true
@@ -225,6 +226,7 @@ class ViewController: UIViewController {
         signupButton.setTitleColor(UIColor.white, for: .normal)
         signupButton.backgroundColor = UIColor.blue
         signupButton.layer.cornerRadius = 5;
+        signupButton.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
         signUpView.addSubview(signupButton)
         
         signupButton.translatesAutoresizingMaskIntoConstraints = false
@@ -284,6 +286,7 @@ class ViewController: UIViewController {
         signInButton.setTitle("Sign In", for: .normal)
         signInButton.backgroundColor = UIColor.blue
         signInButton.layer.cornerRadius = 5
+        signInButton.addTarget(self, action: #selector(handleSignIn), for: .touchUpInside)
         signInView.addSubview(signInButton)
         
         signInLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -317,12 +320,12 @@ class ViewController: UIViewController {
     }
     
     @objc
-    private func handleSignUp() {
+    private func handleSignUpFromLanding() {
         showSignUpFromLanding()
     }
     
     @objc
-    private func handleSignIn() {
+    private func handleSignInFromLanding() {
         showSignInFromLanding()
     }
     
@@ -334,6 +337,16 @@ class ViewController: UIViewController {
     @objc
     private func handleBackFromSignIn() {
         showLandingFromSignIn()
+    }
+    
+    @objc
+    private func handleSignIn() {
+        showHomeViewController()
+    }
+    
+    @objc
+    private func handleSignUp() {
+        showHomeViewController()
     }
     
     private func showSignUpFromLanding() {
@@ -393,6 +406,13 @@ class ViewController: UIViewController {
 
     }
 
+    private func showHomeViewController() {
+        let homeViewController = HomeViewController()
+        let navigator = UINavigationController(rootViewController: homeViewController)
+        present(navigator, animated: true) { 
+            
+        }
+    }
     
 }
 

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1F8000231EEA89F700A84121 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8000221EEA89F600A84121 /* HomeViewController.swift */; };
 		1F8000261EEA8AF500A84121 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8000251EEA8AF500A84121 /* MapKit.framework */; };
+		1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */; };
+		1FBB63FF1EEFDAC500F7E3E7 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */; };
 		1FD562061EE8E88D003D0641 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562051EE8E88D003D0641 /* AppDelegate.swift */; };
 		1FD562081EE8E88D003D0641 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562071EE8E88D003D0641 /* ViewController.swift */; };
 		1FD5620B1EE8E88D003D0641 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD562091EE8E88D003D0641 /* Main.storyboard */; };
@@ -40,6 +42,8 @@
 /* Begin PBXFileReference section */
 		1F8000221EEA89F600A84121 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1F8000251EEA8AF500A84121 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		1FD562021EE8E88D003D0641 /* IndoorNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IndoorNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD562051EE8E88D003D0641 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD562071EE8E88D003D0641 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -117,8 +121,10 @@
 			children = (
 				1FD562051EE8E88D003D0641 /* AppDelegate.swift */,
 				1FD562071EE8E88D003D0641 /* ViewController.swift */,
+				1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */,
 				1FD562361EE8EAD2003D0641 /* ZFRippleButton.swift */,
 				1F8000221EEA89F600A84121 /* HomeViewController.swift */,
+				1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */,
 				1FD562091EE8E88D003D0641 /* Main.storyboard */,
 				1FD5620F1EE8E88D003D0641 /* Assets.xcassets */,
 				1FD562111EE8E88D003D0641 /* LaunchScreen.storyboard */,
@@ -217,6 +223,9 @@
 						DevelopmentTeam = ULB4RP6JB6;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Maps.iOS = {
 								enabled = 1;
 							};
@@ -287,9 +296,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1F8000231EEA89F700A84121 /* HomeViewController.swift in Sources */,
+				1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */,
 				1FD5620E1EE8E88D003D0641 /* IndoorNavigation.xcdatamodeld in Sources */,
 				1FD562081EE8E88D003D0641 /* ViewController.swift in Sources */,
 				1FD562061EE8E88D003D0641 /* AppDelegate.swift in Sources */,
+				1FBB63FF1EEFDAC500F7E3E7 /* HistoryViewController.swift in Sources */,
 				1FD562371EE8EAD2003D0641 /* ZFRippleButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
