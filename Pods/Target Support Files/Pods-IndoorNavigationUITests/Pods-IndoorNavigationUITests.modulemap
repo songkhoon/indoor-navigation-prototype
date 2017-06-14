@@ -1,0 +1,6 @@
+framework module Pods_IndoorNavigationUITests {
+  umbrella header "Pods-IndoorNavigationUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
