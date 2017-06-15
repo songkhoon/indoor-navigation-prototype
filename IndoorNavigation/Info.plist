@@ -40,14 +40,14 @@
         <dict>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>fb252318281896541</string>
+                <string>fb1816961865298325</string>
             </array>
         </dict>
 	</array>
     <key>FacebookAppID</key>
-    <string>252318281896541</string>
+    <string>1816961865298325</string>
     <key>FacebookDisplayName</key>
-    <string>Compass Utility</string>
+    <string>Indoor Navigation</string>
     <key>LSApplicationQueriesSchemes</key>
     <array>
         <string>fbapi</string>
