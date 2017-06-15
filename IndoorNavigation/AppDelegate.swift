@@ -8,12 +8,16 @@
 
 import UIKit
 import CoreData
+import Firebase
+import GoogleSignIn
+import FBSDKCoreKit
+import FBSDKLoginKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let firebaseModel = FirebaseModel()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
@@ -89,6 +93,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
+    }
+    
+    @available(iOS 9.0, *)
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any])
+        -> Bool {
+            let googleHandle = GIDSignIn.sharedInstance().handle(url,
+                                                                 sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                                 annotation: [:])
+            let facebookHandle = FBSDKApplicationDelegate.sharedInstance().application(application,
+                                                                                       open: url,
+                                                                                       sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                                                       annotation: [:])
+            
+            return googleHandle || facebookHandle
+    }
+    
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        let googleHandle = GIDSignIn.sharedInstance().handle(url,
+                                                             sourceApplication: sourceApplication,
+                                                             annotation: annotation)
+        let facebookHandle = FBSDKApplicationDelegate.sharedInstance().application(application,
+                                                                                   open: url,
+                                                                                   sourceApplication: sourceApplication,
+                                                                                   annotation: annotation)
+        return googleHandle || facebookHandle
     }
 
 }

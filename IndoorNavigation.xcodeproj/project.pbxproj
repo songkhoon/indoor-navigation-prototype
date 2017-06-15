@@ -12,6 +12,10 @@
 		1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */; };
 		1FBB63FF1EEFDAC500F7E3E7 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */; };
 		1FBB64011EF0CAD900F7E3E7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FBB64001EF0CAD900F7E3E7 /* GoogleService-Info.plist */; };
+		1FBB64071EF0D4CD00F7E3E7 /* FirebaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB64061EF0D4CD00F7E3E7 /* FirebaseModel.swift */; };
+		1FBB64091EF0D62300F7E3E7 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB64081EF0D62300F7E3E7 /* UserData.swift */; };
+		1FBB640B1EF0D8A700F7E3E7 /* FacebookModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */; };
+		1FBB640D1EF2353900F7E3E7 /* GoogleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */; };
 		1FD562061EE8E88D003D0641 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562051EE8E88D003D0641 /* AppDelegate.swift */; };
 		1FD562081EE8E88D003D0641 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562071EE8E88D003D0641 /* ViewController.swift */; };
 		1FD5620B1EE8E88D003D0641 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD562091EE8E88D003D0641 /* Main.storyboard */; };
@@ -49,6 +53,10 @@
 		1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		1FBB64001EF0CAD900F7E3E7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1FBB64061EF0D4CD00F7E3E7 /* FirebaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FirebaseModel.swift; path = Model/FirebaseModel.swift; sourceTree = "<group>"; };
+		1FBB64081EF0D62300F7E3E7 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserData.swift; path = Model/UserData.swift; sourceTree = "<group>"; };
+		1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FacebookModel.swift; path = Model/FacebookModel.swift; sourceTree = "<group>"; };
+		1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleModel.swift; sourceTree = "<group>"; };
 		1FD562021EE8E88D003D0641 /* IndoorNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IndoorNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD562051EE8E88D003D0641 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD562071EE8E88D003D0641 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +123,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1FBB64051EF0D4AC00F7E3E7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1FBB64081EF0D62300F7E3E7 /* UserData.swift */,
+				1FBB64061EF0D4CD00F7E3E7 /* FirebaseModel.swift */,
+				1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */,
+				1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		1FD561F91EE8E88D003D0641 = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +159,7 @@
 		1FD562041EE8E88D003D0641 /* IndoorNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				1FBB64051EF0D4AC00F7E3E7 /* Model */,
 				1FD562051EE8E88D003D0641 /* AppDelegate.swift */,
 				1FD562071EE8E88D003D0641 /* ViewController.swift */,
 				1FBB63FE1EEFDAC500F7E3E7 /* HistoryViewController.swift */,
@@ -478,13 +498,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FBB64071EF0D4CD00F7E3E7 /* FirebaseModel.swift in Sources */,
 				1F8000231EEA89F700A84121 /* HomeViewController.swift in Sources */,
 				1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */,
+				1FBB64091EF0D62300F7E3E7 /* UserData.swift in Sources */,
+				1FBB640D1EF2353900F7E3E7 /* GoogleModel.swift in Sources */,
 				1FD5620E1EE8E88D003D0641 /* IndoorNavigation.xcdatamodeld in Sources */,
 				1FD562081EE8E88D003D0641 /* ViewController.swift in Sources */,
 				1FD562061EE8E88D003D0641 /* AppDelegate.swift in Sources */,
 				1FBB63FF1EEFDAC500F7E3E7 /* HistoryViewController.swift in Sources */,
 				1FD562371EE8EAD2003D0641 /* ZFRippleButton.swift in Sources */,
+				1FBB640B1EF0D8A700F7E3E7 /* FacebookModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

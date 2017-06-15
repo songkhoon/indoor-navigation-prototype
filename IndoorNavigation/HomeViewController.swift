@@ -19,7 +19,7 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
 
     let homeTitle = "Indoor Navigation"
     var userLocation: CLLocationCoordinate2D?
-    
+
     let locationManager:CLLocationManager = {
         let manager = CLLocationManager()
         manager.desiredAccuracy = kCLLocationAccuracyBest
@@ -161,7 +161,9 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
     }
     
     func signOut() {
-        present(ViewController(), animated: true) { 
+        let viewController = ViewController()
+        viewController.signOut()
+        present(viewController, animated: true) {
             
         }
     }

@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import GoogleSignIn
 
 class ViewController: UIViewController {
+    
+    let firebaseModel: FirebaseModel = {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.firebaseModel
+    }()
     
     let landingView: UIView = {
         let view = UIView()
@@ -58,19 +64,30 @@ class ViewController: UIViewController {
         view.isSecureTextEntry = true
         return view
     }()
-
+    
+    let messageBoard: UIView = {
+        let view = UIView()
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupBackground()
         setupLandingView()
         setupSignUpView()
         setupSignInView()
+        setupFirebase()
+        setupGoogleSignIn()
     }
     
-    override func viewDidLayoutSubviews() {
-        
+    private func setupFirebase() {
+        firebaseModel.delegate = self
+        firebaseModel.checkAuthUser()
+    }
+    
+    private func setupGoogleSignIn() {
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
     }
     
     private func setupBackground() {
@@ -91,6 +108,7 @@ class ViewController: UIViewController {
     }
     
     private func setupLandingView() {
+        landingView.isHidden = true
         view.addSubview(landingView)
         landingView.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         
@@ -138,6 +156,7 @@ class ViewController: UIViewController {
         let facebookConnect = UIButton()
         facebookConnect.setImage(#imageLiteral(resourceName: "facebook"), for: .normal)
         facebookConnect.imageView?.contentMode = .scaleAspectFit
+        facebookConnect.addTarget(self, action: #selector(handleFacebookSignIn), for: .touchUpInside)
         landingView.addSubview(facebookConnect)
         facebookConnect.translatesAutoresizingMaskIntoConstraints = false
         facebookConnect.centerXAnchor.constraint(equalTo: layoutGuideLeft.centerXAnchor, constant: 0).isActive = true
@@ -147,6 +166,7 @@ class ViewController: UIViewController {
         let googlePlus = UIButton()
         googlePlus.setImage(#imageLiteral(resourceName: "google-plus"), for: .normal)
         googlePlus.imageView?.contentMode = .scaleAspectFit
+        googlePlus.addTarget(self, action: #selector(handleGoogleSignIn), for: .touchUpInside)
         landingView.addSubview(googlePlus)
         googlePlus.translatesAutoresizingMaskIntoConstraints = false
         googlePlus.centerXAnchor.constraint(equalTo: layoutGuideRight.centerXAnchor, constant: 0).isActive = true
@@ -158,7 +178,7 @@ class ViewController: UIViewController {
         landingView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
         landingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
         landingView.bottomAnchor.constraint(equalTo: googlePlus.bottomAnchor, constant: 20).isActive = true
-
+        
     }
     
     private func setupSignUpView() {
@@ -210,12 +230,12 @@ class ViewController: UIViewController {
         
         nameSperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         emailSperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
-
+        
         signupForm.centerXAnchor.constraint(equalTo: signUpView.centerXAnchor, constant: 0).isActive = true
         signupForm.widthAnchor.constraint(equalTo: signUpView.widthAnchor, multiplier: 0.9).isActive = true
         signupForm.topAnchor.constraint(equalTo: createLabel.bottomAnchor, constant: 30).isActive = true
         signupForm.bottomAnchor.constraint(equalTo: stackForm.bottomAnchor, constant: 10).isActive = true
-
+        
         stackForm.translatesAutoresizingMaskIntoConstraints = false
         stackForm.centerXAnchor.constraint(equalTo: signupForm.centerXAnchor, constant: 0).isActive = true
         stackForm.centerYAnchor.constraint(equalTo: signupForm.centerYAnchor, constant: 0).isActive = true
@@ -257,7 +277,7 @@ class ViewController: UIViewController {
         backButton.topAnchor.constraint(equalTo: signInView.topAnchor, constant: 10).isActive = true
         backButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-
+        
         let signInLabel = UILabel()
         signInLabel.text = "Sign In"
         signInLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -331,22 +351,52 @@ class ViewController: UIViewController {
     
     @objc
     private func handleBackFromSignUp() {
+        view.endEditing(true)
+        view.layoutIfNeeded()
         showLandingFromSignup()
     }
     
     @objc
     private func handleBackFromSignIn() {
+        view.endEditing(true)
+        view.layoutIfNeeded()
         showLandingFromSignIn()
     }
     
     @objc
     private func handleSignIn() {
-        showHomeViewController()
+        view.endEditing(true)
+        if let email = signInEmailField.text, let password = signInPasswordField.text {
+            firebaseModel.userSigninWithEmailPassword(email: email, password: password)
+        }
     }
     
     @objc
     private func handleSignUp() {
-        showHomeViewController()
+        view.endEditing(true)
+        if let name = signUpNameField.text, let email = signUpEmailField.text, let password = signUpPasswordField.text {
+            firebaseModel.userRegisterWithEmail(name, email, password)
+        } else {
+            showMessage("Please enter your detail")
+        }
+    }
+    
+    @objc
+    private func handleFacebookSignIn() {
+        firebaseModel.userSignInWithFacebook(self)
+    }
+    
+    @objc
+    private func handleGoogleSignIn() {
+        GIDSignIn.sharedInstance().signIn()
+    }
+    
+    func signOut() {
+        firebaseModel.userSignOut()
+    }
+    
+    fileprivate func showLanding() {
+        landingView.isHidden = false
     }
     
     private func showSignUpFromLanding() {
@@ -370,7 +420,7 @@ class ViewController: UIViewController {
         let originX = signUpView.center.x
         landingView.isHidden = false
         landingView.center.x = -view.frame.width
-        UIView.animate(withDuration: 0.5, animations: { 
+        UIView.animate(withDuration: 0.5, animations: {
             self.landingView.center.x = originX
             self.signUpView.center.x = self.view.frame.width * 2
         }) { (complete) in
@@ -401,17 +451,133 @@ class ViewController: UIViewController {
             self.signInView.center.x = self.view.frame.width * 2
         }) { (complete) in
             self.signInView.isHidden = true
-            self.view.endEditing(true)
         }
-
+        
     }
-
-    private func showHomeViewController() {
+    
+    fileprivate func showHomeViewController() {
         let homeViewController = HomeViewController()
         let navigator = UINavigationController(rootViewController: homeViewController)
-        present(navigator, animated: true) { 
+        present(navigator, animated: true) {
             
         }
+    }
+    
+    fileprivate func showMessage(_ message:String) {
+        messageBoard.removeFromSuperview()
+        for view in messageBoard.subviews {
+            view.removeFromSuperview()
+        }
+        
+        let messageLabel = UILabel()
+        messageLabel.text = message
+        messageLabel.textAlignment = .center
+        messageLabel.textColor = .white
+        messageLabel.numberOfLines = 0
+        messageBoard.addSubview(messageLabel)
+        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel.centerXAnchor.constraint(lessThanOrEqualTo: messageBoard.centerXAnchor).isActive = true
+        messageLabel.centerYAnchor.constraint(lessThanOrEqualTo: messageBoard.centerYAnchor).isActive = true
+        messageLabel.widthAnchor.constraint(equalTo: messageBoard.widthAnchor, multiplier: 1).isActive = true
+        messageLabel.heightAnchor.constraint(equalTo: messageBoard.heightAnchor, multiplier: 1).isActive = true
+        messageBoard.backgroundColor = .black
+        view.addSubview(messageBoard)
+        messageBoard.translatesAutoresizingMaskIntoConstraints = false
+        let topAnchor = messageBoard.topAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        topAnchor.isActive = true
+        messageBoard.centerXAnchor.constraint(lessThanOrEqualTo: view.centerXAnchor).isActive = true
+        messageBoard.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
+        messageBoard.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        view.layoutIfNeeded()
+        
+        UIView.animateKeyframes(withDuration: 5, delay: 0, options: [.calculationModeLinear], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.01, animations: {
+                topAnchor.constant = -100
+                self.view.layoutIfNeeded()
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.99, relativeDuration: 1, animations: {
+                topAnchor.constant = 0
+                self.view.layoutIfNeeded()
+            })
+        }) { (complete) in
+            
+        }
+    }
+    
+}
+
+extension ViewController: FirebaseDelegate {
+    
+    func checkAuthUserResponse(_ isAuthUser: Bool) {
+        if isAuthUser {
+            firebaseModel.fetchUserData(completion: { (userData, error) in
+                if let error = error {
+                    self.showLanding()
+                } else {
+                    self.showHomeViewController()
+                }
+            })
+        } else {
+            showLanding()
+        }
+    }
+    
+    func signInResponse(_ userData: UserData?, _ error: Error?) {
+        if let error = error {
+            showMessage(error.localizedDescription)
+        } else {
+            showHomeViewController()
+        }
+    }
+    
+    func signOutResponse(_ error: Error?) {
+        
+    }
+    
+    func registerWithEmailResponse(_ userData: UserData?, _ error: Error?) {
+        if let error = error {
+            showMessage(error.localizedDescription)
+            return
+        }
+        showHomeViewController()
+    }
+    
+}
+
+extension ViewController: GIDSignInUIDelegate {
+    
+    func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
+        if let error = error {
+            showMessage(error.localizedDescription)
+        }
+    }
+    
+    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
+        present(viewController, animated: true, completion: nil)
+    }
+    
+    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension ViewController: GIDSignInDelegate {
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if let error = error {
+            showMessage(error.localizedDescription)
+        } else {
+            if let authentication = user.authentication {
+                firebaseModel.userSignInWithGoogle(authentication.idToken, authentication.accessToken)
+            } else {
+                showMessage("google authentication failure")
+            }
+        }
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+        
     }
     
 }
