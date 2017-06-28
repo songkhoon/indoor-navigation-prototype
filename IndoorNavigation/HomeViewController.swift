@@ -8,6 +8,8 @@
 
 import UIKit
 import MapKit
+import IndoorAtlas
+import SVProgressHUD
 
 public protocol HomeViewControllerDelegate {
     func showHistory()
@@ -19,6 +21,10 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
 
     let homeTitle = "Indoor Navigation"
     var userLocation: CLLocationCoordinate2D?
+    let indoorAtlasModel = IndoorAtlasModel()
+    fileprivate var floorPlan = IAFloorPlan()
+    fileprivate var floorPlanImage = UIImage()
+    var circle = MKCircle()
 
     let locationManager:CLLocationManager = {
         let manager = CLLocationManager()
@@ -78,6 +84,17 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
         menuViewController.homeViewControllerDelegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        // setup for IndoorAtlas Model
+        indoorAtlasModel.delegate = self
+        indoorAtlasModel.requestLocation()
+        SVProgressHUD.show(withStatus: NSLocalizedString("Waiting for location data", comment: ""))
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        
+    }
+    
     private func addSlideMenuButton() {
         navigationItem.leftBarButtonItem = menuBarButton
     }
@@ -85,7 +102,8 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
     private func setupMapView() {
         mapView.delegate = self
         view.addSubview(mapView)
-        mapView.showsUserLocation = true
+        view.sendSubview(toBack: mapView)
+//        mapView.showsUserLocation = true
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         mapView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -179,10 +197,10 @@ extension HomeViewController: CLLocationManagerDelegate {
         if let location = manager.location {
             if userLocation == nil {
                 userLocation = location.coordinate
-                mapView.setCenter(location.coordinate, animated: false)
+//                mapView.setCenter(location.coordinate, animated: false)
                 locationManager.stopUpdatingLocation()
+                zoomLevel = 20
             }
-            zoomLevel = 20
         } else {
             print("location not found")
             locationManager.requestLocation()
@@ -195,4 +213,65 @@ extension HomeViewController: CLLocationManagerDelegate {
 }
 
 extension HomeViewController: MKMapViewDelegate {
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        // If it is possible to convert overlay to MKCircle then render the circle with given properties. Else if the overlay is class of MapOverlay set up its own MapOverlayRenderer. Else render red circle.
+        if let overlay = overlay as? MKCircle {
+            let render = MKCircleRenderer(circle: overlay)
+            render.fillColor = UIColor(colorLiteralRed: 0, green: 0.647, blue: 0.961, alpha: 1.0)
+            return render
+        } else if overlay is MapOverlay {
+            let overlayView = MapOverlayRenderer(overlay: overlay, overlayImage: floorPlanImage, fp: floorPlan)
+            return overlayView
+        } else {
+            let render = MKCircleRenderer(overlay: overlay)
+            render.fillColor = UIColor.init(colorLiteralRed: 1, green: 0, blue: 0, alpha: 1.0)
+            return render
+        }
+    }
+    
+}
+
+// for IndoorAtlas
+extension HomeViewController: IndoorAtlasModelDelegate {
+    
+    func fetchFloorPlanResponse(_ floorPlan: IAFloorPlan?, _ error: Error?) {
+        SVProgressHUD.dismiss()
+        if let floorPlan = floorPlan {
+            self.floorPlan = floorPlan
+            if let imageURL = floorPlan.imageUrl {
+                fetchImage(imageURL)
+            }
+        }
+    }
+    
+    func updateLocationResponse(_ location: CLLocationCoordinate2D) {
+        SVProgressHUD.dismiss()
+        mapView.remove(circle)
+        circle = MKCircle(center: location, radius: 1)
+        mapView.add(circle)
+        
+        // Ask Map Kit for a camera that looks at the location from an altitude of 300 meters above the eye coordinates.
+        let camera = MKMapCamera(lookingAtCenter: location, fromEyeCoordinate: location, eyeAltitude: 300)
+        mapView.camera = camera
+    }
+    
+    private func fetchImage(_ imageURL: URL) {
+        indoorAtlasModel.resourceManger?.fetchFloorPlanImage(with: imageURL, andCompletion: { (data, error) in
+            if let error = error {
+                print("fetchFloorPlanImage error: \(error.localizedDescription)")
+            } else {
+                if let data = data {
+                    self.floorPlanImage = UIImage.init(data: data)!
+                    self.changeMapOverlay()
+                }
+            }
+        })
+    }
+    
+    private func changeMapOverlay() {
+        let overlay = MapOverlay(floorPlan: floorPlan)
+        mapView.add(overlay)
+    }
+    
 }

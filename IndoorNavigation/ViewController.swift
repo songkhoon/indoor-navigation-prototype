@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleSignIn
+import SVProgressHUD
 
 class ViewController: UIViewController {
     
@@ -82,6 +83,7 @@ class ViewController: UIViewController {
     
     private func setupFirebase() {
         firebaseModel.delegate = self
+        SVProgressHUD.show()
         firebaseModel.checkAuthUser()
     }
     
@@ -176,7 +178,7 @@ class ViewController: UIViewController {
         landingView.translatesAutoresizingMaskIntoConstraints = false
         landingView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         landingView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
-        landingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        landingView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
         landingView.bottomAnchor.constraint(equalTo: googlePlus.bottomAnchor, constant: 20).isActive = true
         
     }
@@ -258,7 +260,7 @@ class ViewController: UIViewController {
         signUpView.translatesAutoresizingMaskIntoConstraints = false
         signUpView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         signUpView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        signUpView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        signUpView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
         signUpView.bottomAnchor.constraint(equalTo: signupButton.bottomAnchor, constant: 20).isActive = true
     }
     
@@ -335,7 +337,7 @@ class ViewController: UIViewController {
         signInView.translatesAutoresizingMaskIntoConstraints = false
         signInView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0).isActive = true
         signInView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 0).isActive = true
-        signInView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5).isActive = true
+        signInView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8).isActive = true
         signInView.bottomAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 20).isActive = true
     }
     
@@ -511,6 +513,7 @@ extension ViewController: FirebaseDelegate {
     func checkAuthUserResponse(_ isAuthUser: Bool) {
         if isAuthUser {
             firebaseModel.fetchUserData(completion: { (userData, error) in
+                SVProgressHUD.dismiss()
                 if let error = error {
                     self.showLanding()
                 } else {
@@ -518,11 +521,13 @@ extension ViewController: FirebaseDelegate {
                 }
             })
         } else {
+            SVProgressHUD.dismiss()
             showLanding()
         }
     }
     
     func signInResponse(_ userData: UserData?, _ error: Error?) {
+        SVProgressHUD.dismiss()
         if let error = error {
             showMessage(error.localizedDescription)
         } else {
@@ -535,6 +540,7 @@ extension ViewController: FirebaseDelegate {
     }
     
     func registerWithEmailResponse(_ userData: UserData?, _ error: Error?) {
+        SVProgressHUD.dismiss()
         if let error = error {
             showMessage(error.localizedDescription)
             return

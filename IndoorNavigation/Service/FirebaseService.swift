@@ -1,30 +1,43 @@
 //
-//  FirebaseModel.swift
+//  FirebaseService.swift
 //  IndoorNavigation
 //
-//  Created by jeff on 14/06/2017.
+//  Created by jeff on 21/06/2017.
 //  Copyright © 2017 jeff. All rights reserved.
 //
 
 import Foundation
 import Firebase
 
-protocol FirebaseDelegate {
+protocol FirebaseServiceDelegate {
     
     func checkAuthUserResponse(_ isAuthUser: Bool)
-    func signInResponse(_ userData:UserData?, _ error:Error?)
+    func signInResponse(_ fuser: FirebaseUserData?, _ error:Error?)
     func signOutResponse(_ error:Error?)
-    func registerWithEmailResponse(_ userData:UserData?, _ error:Error?)
-    
+    func registerWithEmailResponse(_ uid: String?, _ error:Error?)
+
 }
 
-class FirebaseModel {
+struct FirebaseUserData {
+    var uid: String?
+    var gid: String?
+    var fid: String?
+    var name: String?
+    var email: String?
+    var profileImageURL: String?
+}
+
+enum FirebaseError: Error {
+    case invalidUser
+    case invalidInput(message: String)
+}
+
+class FirebaseService {
     
-    var delegate: FirebaseDelegate?
-    var userData = UserData()
+    var delegate: FirebaseServiceDelegate?
     let facebookModel = FacebookModel()
-    let googleModel: GoogleModel
-    
+    var googleModel: GoogleModel?
+
     private var databaseRef: FIRDatabaseReference? {
         get {
             if let _ = FIRApp.defaultApp() {
@@ -48,7 +61,9 @@ class FirebaseModel {
     
     init() {
         FIRApp.configure()
-        googleModel = GoogleModel(firebaseClientID: FIRApp.defaultApp()!.options.clientID)
+        if let defaultApp = FIRApp.defaultApp() {
+            googleModel = GoogleModel(firebaseClientID: defaultApp.options.clientID)
+        }
     }
     
     func checkAuthUser() {
@@ -73,24 +88,21 @@ class FirebaseModel {
                     self.delegate?.registerWithEmailResponse(nil, error)
                     return
                 }
-                self.userData.uid = uid
-                self.userData.name = name
-                self.userData.email = email
-                self.delegate?.registerWithEmailResponse(self.userData, nil)
+                self.delegate?.registerWithEmailResponse(uid, nil)
             })
             
         })
     }
-    
+
     func userSigninWithEmailPassword(email: String, password: String) {
         FIRDatabase.database().goOnline()
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
             if let error = error {
                 self.delegate?.signInResponse(nil, error)
             } else {
-                self.userData.uid = user?.uid
-                self.userData.email = email
-                self.delegate?.signInResponse(self.userData, nil)
+                var fuser = FirebaseUserData()
+                fuser.uid = user?.uid
+                self.delegate?.signInResponse(fuser, nil)
             }
         })
     }
@@ -111,12 +123,13 @@ class FirebaseModel {
                     if let error = error {
                         self.delegate?.signInResponse(nil, error)
                     } else {
-                        self.userData.uid = user.uid
-                        self.userData.gid = gid
-                        self.userData.name = displayName
-                        self.userData.email = email
-                        self.userData.profileImageURL = photoURL
-                        self.delegate?.signInResponse(self.userData, nil)
+                        var fuser = FirebaseUserData()
+                        fuser.uid = user.uid
+                        fuser.gid = gid
+                        fuser.name = displayName
+                        fuser.email = email
+                        fuser.profileImageURL = photoURL
+                        self.delegate?.signInResponse(fuser, nil)
                     }
                 })
             }
@@ -142,11 +155,12 @@ class FirebaseModel {
                                 if let error = error {
                                     self.delegate?.signInResponse(nil, error)
                                 } else {
-                                    self.userData.uid = user.uid
-                                    self.userData.fid = fid
-                                    self.userData.email = email
-                                    self.userData.profileImageURL = photo
-                                    self.delegate?.signInResponse(self.userData, nil)
+                                    var fuser = FirebaseUserData()
+                                    fuser.uid = user.uid
+                                    fuser.fid = fid
+                                    fuser.email = email
+                                    fuser.profileImageURL = photo
+                                    self.delegate?.signInResponse(fuser, nil)
                                 }
                             })
                         }
@@ -165,7 +179,7 @@ class FirebaseModel {
             if let user = authUser {
                 for data in user.providerData {
                     if data.providerID == "google.com" {
-                        googleModel.signOut()
+                        googleModel?.signOut()
                     } else if data.providerID == "facebook.com" {
                         facebookModel.facebookLogout()
                     }
@@ -178,8 +192,8 @@ class FirebaseModel {
             delegate?.signOutResponse(signoutError)
         }
     }
-    
-    func fetchUserData(completion: @escaping (UserData?, FirebaseError?) -> Void) {
+
+    func fetchUserData(completion: @escaping (FirebaseUserData?, FirebaseError?) -> Void) {
         guard let uid = authUser?.uid else {
             completion(nil, FirebaseError.invalidUser)
             return
@@ -190,10 +204,11 @@ class FirebaseModel {
                 snapshot.ref.child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
                     if let data = snapshot.value as? [String: Any] {
                         if let name = data["name"] as? String, let email = data["email"] as? String {
-                            self.userData.uid = uid
-                            self.userData.name = name
-                            self.userData.email = email
-                            completion(self.userData, nil)
+                            var fuser = FirebaseUserData()
+                            fuser.uid = uid
+                            fuser.name = name
+                            fuser.email = email
+                            completion(fuser, nil)
                         }
                     }
                 })
@@ -203,5 +218,5 @@ class FirebaseModel {
             }
         })
     }
-    
+
 }

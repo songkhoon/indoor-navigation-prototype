@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F2B02A21EF26B9400CCC7C1 /* MapOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2B02A11EF26B9400CCC7C1 /* MapOverlay.swift */; };
 		1F8000231EEA89F700A84121 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8000221EEA89F600A84121 /* HomeViewController.swift */; };
 		1F8000261EEA8AF500A84121 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8000251EEA8AF500A84121 /* MapKit.framework */; };
 		1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */; };
@@ -16,6 +17,7 @@
 		1FBB64091EF0D62300F7E3E7 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB64081EF0D62300F7E3E7 /* UserData.swift */; };
 		1FBB640B1EF0D8A700F7E3E7 /* FacebookModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */; };
 		1FBB640D1EF2353900F7E3E7 /* GoogleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */; };
+		1FBB640F1EF2629400F7E3E7 /* IndoorAtlasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB640E1EF2629400F7E3E7 /* IndoorAtlasModel.swift */; };
 		1FD562061EE8E88D003D0641 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562051EE8E88D003D0641 /* AppDelegate.swift */; };
 		1FD562081EE8E88D003D0641 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562071EE8E88D003D0641 /* ViewController.swift */; };
 		1FD5620B1EE8E88D003D0641 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FD562091EE8E88D003D0641 /* Main.storyboard */; };
@@ -25,6 +27,8 @@
 		1FD5621E1EE8E88D003D0641 /* IndoorNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD5621D1EE8E88D003D0641 /* IndoorNavigationTests.swift */; };
 		1FD562291EE8E88D003D0641 /* IndoorNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562281EE8E88D003D0641 /* IndoorNavigationUITests.swift */; };
 		1FD562371EE8EAD2003D0641 /* ZFRippleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD562361EE8EAD2003D0641 /* ZFRippleButton.swift */; };
+		1FEAFBF21EF9FFCA00FBC1AB /* Pods_IndoorNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2389EA7C02AF1585D69879E5 /* Pods_IndoorNavigation.framework */; };
+		1FEAFBF51EFA022D00FBC1AB /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEAFBF41EFA022D00FBC1AB /* FirebaseService.swift */; };
 		335FD8C17AD80DD378CF51A5 /* Pods_IndoorNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2389EA7C02AF1585D69879E5 /* Pods_IndoorNavigation.framework */; };
 		6637F0F4DCFA20EA5159EC8A /* Pods_IndoorNavigationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 980F8485B6A4C030F7A25973 /* Pods_IndoorNavigationTests.framework */; };
 		B8B04E861BC1AF3EC0F2580E /* Pods_IndoorNavigationUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE92E661AEEED5846AD3217F /* Pods_IndoorNavigationUITests.framework */; };
@@ -48,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1F2B02A11EF26B9400CCC7C1 /* MapOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOverlay.swift; sourceTree = "<group>"; };
 		1F8000221EEA89F600A84121 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		1F8000251EEA8AF500A84121 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +62,7 @@
 		1FBB64081EF0D62300F7E3E7 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserData.swift; path = Model/UserData.swift; sourceTree = "<group>"; };
 		1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FacebookModel.swift; path = Model/FacebookModel.swift; sourceTree = "<group>"; };
 		1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleModel.swift; sourceTree = "<group>"; };
+		1FBB640E1EF2629400F7E3E7 /* IndoorAtlasModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IndoorAtlasModel.swift; path = Model/IndoorAtlasModel.swift; sourceTree = "<group>"; };
 		1FD562021EE8E88D003D0641 /* IndoorNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IndoorNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD562051EE8E88D003D0641 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1FD562071EE8E88D003D0641 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,6 +78,8 @@
 		1FD562281EE8E88D003D0641 /* IndoorNavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndoorNavigationUITests.swift; sourceTree = "<group>"; };
 		1FD5622A1EE8E88D003D0641 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1FD562361EE8EAD2003D0641 /* ZFRippleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZFRippleButton.swift; sourceTree = "<group>"; };
+		1FEAFBF41EFA022D00FBC1AB /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FirebaseService.swift; path = Service/FirebaseService.swift; sourceTree = "<group>"; };
+		1FEAFBF81EFA147400FBC1AB /* ContextPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ContextPlayground.playground; sourceTree = "<group>"; };
 		2389EA7C02AF1585D69879E5 /* Pods_IndoorNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IndoorNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		35BBEABFB19CC54D5F607772 /* Pods-IndoorNavigationUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndoorNavigationUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IndoorNavigationUITests/Pods-IndoorNavigationUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7B550D0CCEDA2B1CA108CDCF /* Pods-IndoorNavigationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IndoorNavigationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IndoorNavigationTests/Pods-IndoorNavigationTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -98,6 +106,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6637F0F4DCFA20EA5159EC8A /* Pods_IndoorNavigationTests.framework in Frameworks */,
+				1FEAFBF21EF9FFCA00FBC1AB /* Pods_IndoorNavigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,6 +139,7 @@
 				1FBB64061EF0D4CD00F7E3E7 /* FirebaseModel.swift */,
 				1FBB640A1EF0D8A700F7E3E7 /* FacebookModel.swift */,
 				1FBB640C1EF2353900F7E3E7 /* GoogleModel.swift */,
+				1FBB640E1EF2629400F7E3E7 /* IndoorAtlasModel.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -159,6 +169,7 @@
 		1FD562041EE8E88D003D0641 /* IndoorNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				1FEAFBF31EFA020A00FBC1AB /* Service */,
 				1FBB64051EF0D4AC00F7E3E7 /* Model */,
 				1FD562051EE8E88D003D0641 /* AppDelegate.swift */,
 				1FD562071EE8E88D003D0641 /* ViewController.swift */,
@@ -166,6 +177,8 @@
 				1FD562361EE8EAD2003D0641 /* ZFRippleButton.swift */,
 				1F8000221EEA89F600A84121 /* HomeViewController.swift */,
 				1FBB63FC1EEF93FF00F7E3E7 /* MenuViewController.swift */,
+				1F2B02A11EF26B9400CCC7C1 /* MapOverlay.swift */,
+				1FEAFBF81EFA147400FBC1AB /* ContextPlayground.playground */,
 				1FD562091EE8E88D003D0641 /* Main.storyboard */,
 				1FD5620F1EE8E88D003D0641 /* Assets.xcassets */,
 				1FD562111EE8E88D003D0641 /* LaunchScreen.storyboard */,
@@ -192,6 +205,14 @@
 				1FD5622A1EE8E88D003D0641 /* Info.plist */,
 			);
 			path = IndoorNavigationUITests;
+			sourceTree = "<group>";
+		};
+		1FEAFBF31EFA020A00FBC1AB /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				1FEAFBF41EFA022D00FBC1AB /* FirebaseService.swift */,
+			);
+			name = Service;
 			sourceTree = "<group>";
 		};
 		44425B04BA80DDBD3B858446 /* Pods */ = {
@@ -498,8 +519,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F2B02A21EF26B9400CCC7C1 /* MapOverlay.swift in Sources */,
 				1FBB64071EF0D4CD00F7E3E7 /* FirebaseModel.swift in Sources */,
 				1F8000231EEA89F700A84121 /* HomeViewController.swift in Sources */,
+				1FBB640F1EF2629400F7E3E7 /* IndoorAtlasModel.swift in Sources */,
+				1FEAFBF51EFA022D00FBC1AB /* FirebaseService.swift in Sources */,
 				1FBB63FD1EEF93FF00F7E3E7 /* MenuViewController.swift in Sources */,
 				1FBB64091EF0D62300F7E3E7 /* UserData.swift in Sources */,
 				1FBB640D1EF2353900F7E3E7 /* GoogleModel.swift in Sources */,
@@ -664,6 +688,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ULB4RP6JB6;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = IndoorNavigation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.compass.indoor.IndoorNavigation;
@@ -678,6 +703,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ULB4RP6JB6;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = IndoorNavigation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.compass.indoor.IndoorNavigation;
