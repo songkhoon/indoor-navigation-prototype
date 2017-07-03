@@ -104,6 +104,7 @@ class HomeViewController: UIViewController, HomeViewControllerDelegate {
         view.addSubview(mapView)
         view.sendSubview(toBack: mapView)
 //        mapView.showsUserLocation = true
+        mapView.mapType = .satellite
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         mapView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

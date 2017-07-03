@@ -47,7 +47,9 @@ class FirebaseModel {
     }
     
     init() {
-        FIRApp.configure()
+        if FIRApp.defaultApp() == nil {
+            FIRApp.configure()
+        }
         googleModel = GoogleModel(firebaseClientID: FIRApp.defaultApp()!.options.clientID)
     }
     
@@ -200,6 +202,29 @@ class FirebaseModel {
             } else {
                 self.userSignOut()
                 completion(nil, FirebaseError.invalidUser)
+            }
+        })
+    }
+    
+    func fetchFloorPlanData() {
+        databaseRef?.child("indoor-atlas-floorplan").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let floorData = snapshot.value as? [String: Any] {
+                for data in floorData {
+                    if let floors = data.value as? [String: Any] {
+                        for floor in floors {
+                            if let name = floor.value as? String, floor.key == "name" {
+                                print(name)
+                            }
+                            if let waypoints = floor.value as? [String: [String: String]] {
+                                for waypoint in waypoints {
+                                    print(waypoint.value["name"])
+                                    print(waypoint.value["latitude"])
+                                    print(waypoint.value["longitude"])
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
     }

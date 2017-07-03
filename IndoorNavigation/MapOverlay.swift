@@ -18,7 +18,6 @@ class MapOverlay: NSObject, MKOverlay {
     // Initializer for the class
     init(floorPlan: IAFloorPlan) {
         coordinate = floorPlan.center
-        boundingMapRect = MKMapRect()
         
         //Width and height in MapPoints for the floorplan
         let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(coordinate.latitude)
@@ -27,7 +26,9 @@ class MapOverlay: NSObject, MKOverlay {
         
         // Area coordinates for the overlay
         let topLeft = MKMapPointForCoordinate(floorPlan.topLeft)
-        boundingMapRect = MKMapRectMake(topLeft.x, topLeft.y, Double(widthMapPoints), Double(heightMapPoints))
+        let mapWidth = Double(widthMapPoints)
+        let mapHeight = Double(heightMapPoints)
+        boundingMapRect = MKMapRectMake(topLeft.x - mapWidth / 2, topLeft.y + mapHeight / 2, mapWidth, mapHeight)
     }
 }
 
@@ -35,15 +36,23 @@ class MapOverlay: NSObject, MKOverlay {
 class MapOverlayRenderer: MKOverlayRenderer {
     var overlayImage: UIImage
     var floorPlan: IAFloorPlan
+    var mapRect: CGRect
     
     init(overlay:MKOverlay, overlayImage:UIImage, fp: IAFloorPlan) {
         self.overlayImage = overlayImage
         self.floorPlan = fp
         // floorPlan.imageURL = "https://idaweb.blob.core.windows.net/imageblobcontainer/d8639bc5-9486-41b7-a2fb-61990bcdb829"
         // floorPlan.bearing = 59.546650481646623
+        
+        //Width and height in MapPoints for the floorplan
+        let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(overlay.coordinate.latitude)
+        let widthMapPoints = floorPlan.widthMeters * Float(mapPointsPerMeter)
+        let heightMapPoints = floorPlan.heightMeters * Float(mapPointsPerMeter)
+        let mapWidth = Double(widthMapPoints)
+        let mapHeight = Double(heightMapPoints)
+        mapRect = CGRect(x: 0, y: 0, width: mapWidth, height: mapHeight)
+        
         super.init(overlay: overlay)
-//        self.overlayImage = self.imageRotatedByDegrees(oldImage: self.overlayImage, deg: CGFloat(fp.bearing))
-//        self.overlayImage = self.overlayImage.fixedOrientation().imageRotatedByDegrees(degrees: CGFloat(fp.bearing))
     }
     
     override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in ctx: CGContext) {
@@ -51,16 +60,12 @@ class MapOverlayRenderer: MKOverlayRenderer {
         let theRect = rect(for: theMapRect)
 
         // Rotate around top left corner
-//        ctx.scaleBy(x: 1.0, y: -1.0)
-//        ctx.translateBy(x: 0.0, y: -theRect.size.height)
-        ctx.translateBy(x: theRect.size.width / 2.0, y: theRect.size.height / 2.0)
+        ctx.translateBy(x: theRect.width / 2, y: -theRect.height / 2)
         ctx.rotate(by: CGFloat(degreesToRadians(floorPlan.bearing)));
-        ctx.translateBy(x: -theRect.size.width / 2.0, y: -theRect.size.height / 2.0)
-//        ctx.draw(overlayImage.cgImage!, in: theRect)
 
         // Draw the floorplan image
         UIGraphicsPushContext(ctx)
-        overlayImage.draw(in: theRect, blendMode: CGBlendMode.color, alpha: 1.0)
+        overlayImage.draw(in: theRect, blendMode: CGBlendMode.color, alpha: 0.9)
         UIGraphicsPopContext();
     }
     
