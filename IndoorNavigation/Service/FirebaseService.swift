@@ -9,32 +9,13 @@
 import Foundation
 import Firebase
 
-protocol FirebaseServiceDelegate {
-    
-    func checkAuthUserResponse(_ isAuthUser: Bool)
-    func signInResponse(_ fuser: FirebaseUserData?, _ error:Error?)
-    func signOutResponse(_ error:Error?)
-    func registerWithEmailResponse(_ uid: String?, _ error:Error?)
-
-}
-
-struct FirebaseUserData {
-    var uid: String?
-    var gid: String?
-    var fid: String?
-    var name: String?
-    var email: String?
-    var profileImageURL: String?
-}
-
 enum FirebaseError: Error {
     case invalidUser
     case invalidInput(message: String)
 }
 
-class FirebaseService {
+public class FirebaseService {
     
-    var delegate: FirebaseServiceDelegate?
     let facebookModel = FacebookModel()
     var googleModel: GoogleModel?
 
@@ -60,21 +41,23 @@ class FirebaseService {
     }
     
     init() {
-        FIRApp.configure()
+        if FIRApp.defaultApp() == nil {
+            FIRApp.configure()
+        }
         if let defaultApp = FIRApp.defaultApp() {
             googleModel = GoogleModel(firebaseClientID: defaultApp.options.clientID)
         }
     }
     
-    func checkAuthUser() {
-        delegate?.checkAuthUserResponse(authUser != nil)
+    func checkAuthUser(completion: (Bool) -> Void) {
+        completion(authUser != nil)
     }
     
-    func userRegisterWithEmail(_ name:String, _ email:String, _ password:String) {
+    func userRegisterWithEmail(_ name:String, _ email:String, _ password:String, completion: @escaping (UserData?, Error?) -> Void) {
         FIRDatabase.database().goOnline()
         FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: { (user, error) in
             if error != nil {
-                self.delegate?.registerWithEmailResponse(nil, error)
+                completion(nil, error)
                 return
             }
             
@@ -85,34 +68,36 @@ class FirebaseService {
             let values = ["email": email, "name": name]
             self.usersRef?.child(uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
                 if error != nil {
-                    self.delegate?.registerWithEmailResponse(nil, error)
+                    completion(nil, error)
                     return
                 }
-                self.delegate?.registerWithEmailResponse(uid, nil)
+                var userData = UserData()
+                userData.uid = uid
+                userData.email = email
+                completion(userData, nil)
             })
-            
         })
     }
 
-    func userSigninWithEmailPassword(email: String, password: String) {
+    func userSigninWithEmailPassword(email: String, password: String, completion: @escaping (UserData?, Error?) -> Void) {
         FIRDatabase.database().goOnline()
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { (user, error) in
             if let error = error {
-                self.delegate?.signInResponse(nil, error)
+                completion(nil, error)
             } else {
-                var fuser = FirebaseUserData()
-                fuser.uid = user?.uid
-                self.delegate?.signInResponse(fuser, nil)
+                var userData = UserData()
+                userData.uid = user?.uid
+                completion(userData, nil)
             }
         })
     }
     
-    func userSignInWithGoogle(_ idToken:String, _ accessToken: String) {
+    func userSignInWithGoogle(_ idToken:String, _ accessToken: String, completion: @escaping (UserData?, Error?) -> Void) {
         FIRDatabase.database().goOnline()
         let credential = FIRGoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
         FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
             if let error = error {
-                self.delegate?.signInResponse(nil, error)
+                completion(nil, error)
             } else if let user = user {
                 let email = user.email ?? ""
                 let displayName = user.displayName ?? ""
@@ -121,22 +106,22 @@ class FirebaseService {
                 let values: [String: Any] = ["name": displayName, "email": email, "gid": gid, "photo": photoURL]
                 self.usersRef?.child(user.uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
                     if let error = error {
-                        self.delegate?.signInResponse(nil, error)
+                        completion(nil, error)
                     } else {
-                        var fuser = FirebaseUserData()
-                        fuser.uid = user.uid
-                        fuser.gid = gid
-                        fuser.name = displayName
-                        fuser.email = email
-                        fuser.profileImageURL = photoURL
-                        self.delegate?.signInResponse(fuser, nil)
+                        var userData = UserData()
+                        userData.uid = user.uid
+                        userData.gid = gid
+                        userData.name = displayName
+                        userData.email = email
+                        userData.profileImageURL = photoURL
+                        completion(userData, nil)
                     }
                 })
             }
         })
     }
     
-    func userSignInWithFacebook(_ viewController: UIViewController) {
+    func userSignInWithFacebook(_ viewController: UIViewController, completion: @escaping (UserData?, Error?) -> Void) {
         facebookModel.facebookLogin(viewController) { (success) in
             if success {
                 if let accessToken = self.facebookModel.accessToken {
@@ -144,7 +129,7 @@ class FirebaseService {
                     let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
                     FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
                         if let error = error {
-                            self.delegate?.signInResponse(nil, error)
+                            completion(nil, error)
                         } else if let user = user {
                             let displayName = user.displayName ?? ""
                             let fid = user.providerData[0].uid
@@ -153,28 +138,28 @@ class FirebaseService {
                             let values = ["name": displayName, "email": email, "fid": fid, "photo": photo]
                             self.usersRef?.child(user.uid).updateChildValues(values, withCompletionBlock: { (error, ref) in
                                 if let error = error {
-                                    self.delegate?.signInResponse(nil, error)
+                                    completion(nil, error)
                                 } else {
-                                    var fuser = FirebaseUserData()
-                                    fuser.uid = user.uid
-                                    fuser.fid = fid
-                                    fuser.email = email
-                                    fuser.profileImageURL = photo
-                                    self.delegate?.signInResponse(fuser, nil)
+                                    var userData = UserData()
+                                    userData.uid = user.uid
+                                    userData.fid = fid
+                                    userData.email = email
+                                    userData.profileImageURL = photo
+                                    completion(userData, nil)
                                 }
                             })
                         }
                     })
                 } else {
-                    self.delegate?.signInResponse(nil, FirebaseError.invalidInput(message: "cannot retrieve facebook access token"))
+                    completion(nil, FirebaseError.invalidInput(message: "cannot retrieve facebook access token"))
                 }
             } else {
-                self.delegate?.signInResponse(nil, FirebaseError.invalidInput(message: "facebook fail to sign in"))
+                completion(nil, FirebaseError.invalidInput(message: "facebook fail to sign in"))
             }
         }
     }
     
-    func userSignOut() {
+    func userSignOut(completion: (Error?) -> Void) {
         do {
             if let user = authUser {
                 for data in user.providerData {
@@ -185,15 +170,15 @@ class FirebaseService {
                     }
                 }
                 try FIRAuth.auth()?.signOut()
-                delegate?.signOutResponse(nil)
+                completion(nil)
                 FIRDatabase.database().goOffline()
             }
         } catch let signoutError {
-            delegate?.signOutResponse(signoutError)
+            completion(signoutError)
         }
     }
 
-    func fetchUserData(completion: @escaping (FirebaseUserData?, FirebaseError?) -> Void) {
+    func fetchUserData(completion: @escaping (UserData?, Error?) -> Void) {
         guard let uid = authUser?.uid else {
             completion(nil, FirebaseError.invalidUser)
             return
@@ -204,17 +189,43 @@ class FirebaseService {
                 snapshot.ref.child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
                     if let data = snapshot.value as? [String: Any] {
                         if let name = data["name"] as? String, let email = data["email"] as? String {
-                            var fuser = FirebaseUserData()
-                            fuser.uid = uid
-                            fuser.name = name
-                            fuser.email = email
-                            completion(fuser, nil)
+                            var userData = UserData()
+                            userData.uid = uid
+                            userData.name = name
+                            userData.email = email
+                            completion(userData, nil)
                         }
                     }
                 })
             } else {
-                self.userSignOut()
+                self.userSignOut(completion: { (error) in
+                    
+                })
                 completion(nil, FirebaseError.invalidUser)
+            }
+        })
+    }
+    
+    func fetchFloorPlanData(completion: @escaping (Any) -> Void) {
+        databaseRef?.child("indoor-atlas-floorplan").observeSingleEvent(of: .value, with: { (snapshot) in
+            if let floorData = snapshot.value as? [String: Any] {
+                for data in floorData {
+                    if let floors = data.value as? [String: Any] {
+                        for floor in floors {
+                            if let name = floor.value as? String, floor.key == "name" {
+                                print(name)
+                            }
+                            if let waypoints = floor.value as? [String: [String: String]] {
+                                completion(waypoints)
+                                for waypoint in waypoints {
+//                                    print(waypoint.value["name"])
+//                                    print(waypoint.value["latitude"])
+//                                    print(waypoint.value["longitude"])
+                                }
+                            }
+                        }
+                    }
+                }
             }
         })
     }
