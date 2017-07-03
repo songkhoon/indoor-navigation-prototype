@@ -2,6 +2,7 @@
 # platform :ios, '9.0'
 
 def firebase_pod
+    pod 'Firebase/Core'
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Storage'
@@ -35,11 +36,13 @@ target 'IndoorNavigation' do
   target 'IndoorNavigationTests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'Firebase'
   end
 
   target 'IndoorNavigationUITests' do
     inherit! :search_paths
     # Pods for testing
+    pod 'Firebase'
   end
 
 end

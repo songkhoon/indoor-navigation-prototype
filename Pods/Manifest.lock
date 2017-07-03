@@ -9,6 +9,8 @@ PODS:
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.21.0):
     - FBSDKCoreKit
+  - Firebase (3.15.0):
+    - Firebase/Core (= 3.15.0)
   - Firebase/Auth (3.15.0):
     - Firebase/Core
     - FirebaseAuth (= 3.1.1)
@@ -66,7 +68,9 @@ DEPENDENCIES:
   - Bolts
   - FBSDKCoreKit
   - FBSDKLoginKit
+  - Firebase
   - Firebase/Auth
+  - Firebase/Core
   - Firebase/Database
   - Firebase/Storage
   - GoogleSignIn
@@ -100,6 +104,6 @@ SPEC CHECKSUMS:
   IndoorAtlas: 866807ed552ed9571a2c2defddf0f0742af3a387
   SVProgressHUD: d65371a8e4482380deddb9fe60e14e59ddb30eb3
 
-PODFILE CHECKSUM: 8c60fee7d157f64dad9abf76d5c1bc19ec91d4fe
+PODFILE CHECKSUM: 598ba350bdb10d2f43fc694b91e9de201fe7235d
 
 COCOAPODS: 1.2.0
