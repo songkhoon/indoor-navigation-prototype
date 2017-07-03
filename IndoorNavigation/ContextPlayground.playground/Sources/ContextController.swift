@@ -10,7 +10,7 @@ public class ContextController: UIViewController {
     
     private func addCustomView() {
         let customView = CustomView(frame: CGRect(x: 50, y: 50, width: 300, height: 300))
-        customView.backgroundColor = .white
+        customView.backgroundColor = .clear
         customView.layer.borderWidth = 2.0
         customView.layer.borderColor = UIColor.black.cgColor
         view.addSubview(customView)
@@ -19,13 +19,67 @@ public class ContextController: UIViewController {
 }
 
 class CustomView: UIView {
-    
-    let degreesToRadian: (CGFloat) -> CGFloat = {
-        return $0 / 180 * CGFloat.pi
+
+    class DrawTool {
+        let degreesToRadian: (CGFloat) -> CGFloat = {
+            return $0 / 180 * CGFloat.pi
+        }
+        
+        func drawRectangle(_ rect: CGRect, _ rotate: CGFloat) {
+            let context = UIGraphicsGetCurrentContext()
+            let redImage = getImageWithColor(color: .red, size: rect.size)
+            context?.translateBy(x: rect.width / 2, y: rect.height / 2)
+            
+            context?.draw(redImage.cgImage!, in: rect)
+            
+            let blueImage = getImageWithColor(color: .blue, size: rect.size)
+            context?.rotate(by: degreesToRadian(rotate))
+            context?.draw(blueImage.cgImage!, in: rect)
+        }
+        
+        func getImageWithColor(color: UIColor, size: CGSize) -> UIImage {
+            let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            UIGraphicsBeginImageContextWithOptions(size, false, 0)
+            color.setFill()
+            UIRectFill(rect)
+            let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            return image
+        }
     }
     
-    override func draw(_ rect: CGRect) {
-        drawRectangle(CGRect(x: 0, y: 0, width: 100, height: 50))
+    class SubView: UIView {
+        var drawRect: CGRect
+        var rotate: CGFloat
+        
+        init(frame: CGRect, drawRect: CGRect, rotate: CGFloat) {
+            self.drawRect = drawRect
+            self.rotate = rotate
+            super.init(frame: frame)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override func draw(_ rect: CGRect) {
+            let drawTool = DrawTool()
+            drawTool.drawRectangle(drawRect, rotate)
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        let drawRect = CGRect(x: 0, y: 0, width: 100, height: 50)
+        let subView = SubView(frame: frame, drawRect: drawRect, rotate: 45.0)
+        subView.backgroundColor = .black
+        clipsToBounds = false  // no effect
+        addSubview(subView)
+        subView.frame.origin = CGPoint(x: -drawRect.width / 2, y: -drawRect.height / 2)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func drawCircleWithPlus(_ rect: CGRect) {
@@ -46,28 +100,6 @@ class CustomView: UIView {
         
         UIColor.white.setStroke()
         plusPath.stroke()
-    }
-    
-    private func drawRectangle(_ rect: CGRect) {
-        let context = UIGraphicsGetCurrentContext()
-        let redImage = getImageWithColor(color: .red, size: rect.size)
-        context?.draw(redImage.cgImage!, in: rect)
-        
-        let blueImage = getImageWithColor(color: .blue, size: rect.size)
-//        context?.translateBy(x: rect.width / 2, y: rect.height / 2)
-        context?.rotate(by: degreesToRadian(45))
-//        context?.translateBy(x: -rect.width / 2, y: -rect.height / 2)
-        context?.draw(blueImage.cgImage!, in: rect)
-    }
-    
-    func getImageWithColor(color: UIColor, size: CGSize) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        color.setFill()
-        UIRectFill(rect)
-        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return image
     }
     
     private func imageRotatedByDegrees(oldImage: UIImage, deg degrees: CGFloat) -> UIImage {
